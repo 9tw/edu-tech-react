@@ -27,6 +27,7 @@ import {
   Container,
   Row,
   Col,
+  Button,
 } from "reactstrap";
 
 const AdminNavbar = () => {
@@ -40,6 +41,21 @@ const AdminNavbar = () => {
               src={require("../../assets/img/brand/argon-react-white.png")}
             />
           </NavbarBrand>
+          <NavLink className="nav-link-icon" to="/home/index" tag={Link}>
+            <span className="nav-link-inner--text" style={{ color: "white" }}>
+              Home
+            </span>
+          </NavLink>
+          <NavLink className="nav-link-icon" to="/home/index" tag={Link}>
+            <span className="nav-link-inner--text" style={{ color: "white" }}>
+              Program
+            </span>
+          </NavLink>
+          <NavLink className="nav-link-icon" to="/home/index" tag={Link}>
+            <span className="nav-link-inner--text" style={{ color: "white" }}>
+              About
+            </span>
+          </NavLink>
           <button className="navbar-toggler" id="navbar-collapse-main">
             <span className="navbar-toggler-icon" />
           </button>
@@ -63,29 +79,50 @@ const AdminNavbar = () => {
               </Row>
             </div>
             <Nav className="ml-auto" navbar>
-              <NavItem>
+              {/* <NavItem>
+                <NavLink className="nav-link-icon" to="/auth/home" tag={Link}>
+                  <i className="ni ni-shop" />
+                  <span className="nav-link-inner--text">Home</span>
+                </NavLink>
+              </NavItem> */}
+              {/* <NavItem>
                 <NavLink className="nav-link-icon" to="/" tag={Link}>
                   <i className="ni ni-planet" />
                   <span className="nav-link-inner--text">Dashboard</span>
                 </NavLink>
+              </NavItem> */}
+              <NavItem>
+                <Button
+                  color="neutral"
+                  href="/auth/login"
+                  // onClick={(e) => e.preventDefault()}
+                  style={{ color: "#0dcdef" }}
+                >
+                  <span className="nav-link-inner--text">Login</span>
+                </Button>
+                {/* <NavLink className="nav-link-icon" to="/auth/login" tag={Link}>
+                  <i className="ni ni-key-25" />
+                  <span className="nav-link-inner--text">Login</span>
+                </NavLink> */}
               </NavItem>
               <NavItem>
-                <NavLink
+                <Button
+                  color="info"
+                  href="/auth/register"
+                  // onClick={(e) => e.preventDefault()}
+                >
+                  <span className="nav-link-inner--text">Register</span>
+                </Button>
+                {/* <NavLink
                   className="nav-link-icon"
                   to="/auth/register"
                   tag={Link}
                 >
                   <i className="ni ni-circle-08" />
                   <span className="nav-link-inner--text">Register</span>
-                </NavLink>
+                </NavLink> */}
               </NavItem>
-              <NavItem>
-                <NavLink className="nav-link-icon" to="/auth/login" tag={Link}>
-                  <i className="ni ni-key-25" />
-                  <span className="nav-link-inner--text">Login</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
+              {/* <NavItem>
                 <NavLink
                   className="nav-link-icon"
                   to="/admin/user-profile"
@@ -94,7 +131,7 @@ const AdminNavbar = () => {
                   <i className="ni ni-single-02" />
                   <span className="nav-link-inner--text">Profile</span>
                 </NavLink>
-              </NavItem>
+              </NavItem> */}
             </Nav>
           </UncontrolledCollapse>
         </Container>
