@@ -37,142 +37,147 @@ const Home = () => {
     <>
       <Col lg="10" style={{ display: "flex" }}>
         <img
-          alt="..."
+          alt="EduTech"
           src={require("../../assets/img/sigmund-Im_cQ6hQo10-unsplash.jpg")}
           style={{ width: "50%", borderRadius: 50 }}
         />
-        {/* <div
-          style={{
-            marginLeft: "10px",
-            backgroundColor: "white",
-            borderRadius: 50,
-            padding: "10px",
-            alignItems: "center",
-          }}
-        > */}
         <div style={{ margin: "auto 10px auto" }}>
           <h1 style={{ color: "white" }}>Education Technology Website</h1>
           <p style={{ color: "white" }}>
             Upgrade your skill to be a better programmer
           </p>
         </div>
-        {/* </div> */}
-        {/* <Card className="bg-secondary shadow border-0">
-          <CardHeader className="bg-transparent pb-5">
-            <div className="text-muted text-center mt-2 mb-3">
-              <small>Test Home</small>
-            </div>
-            <div className="btn-wrapper text-center">
-              <Button
-                className="btn-neutral btn-icon"
-                color="default"
-                href="#pablo"
-                onClick={(e) => e.preventDefault()}
-              >
-                <span className="btn-inner--icon">
-                  <img
-                    alt="..."
-                    src={
-                      require("../../assets/img/icons/common/github.svg")
-                        .default
-                    }
-                  />
-                </span>
-                <span className="btn-inner--text">Github</span>
-              </Button>
-              <Button
-                className="btn-neutral btn-icon"
-                color="default"
-                href="#pablo"
-                onClick={(e) => e.preventDefault()}
-              >
-                <span className="btn-inner--icon">
-                  <img
-                    alt="..."
-                    src={
-                      require("../../assets/img/icons/common/google.svg")
-                        .default
-                    }
-                  />
-                </span>
-                <span className="btn-inner--text">Google</span>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardBody className="px-lg-5 py-lg-5">
-            <div className="text-center text-muted mb-4">
-              <small>Or sign in with credentials</small>
-            </div>
-            <Form role="form">
-              <FormGroup className="mb-3">
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-email-83" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    autoComplete="new-email"
-                  />
-                </InputGroup>
-              </FormGroup>
-              <FormGroup>
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    autoComplete="new-password"
-                  />
-                </InputGroup>
-              </FormGroup>
-              <div className="custom-control custom-control-alternative custom-checkbox">
-                <input
-                  className="custom-control-input"
-                  id=" customCheckLogin"
-                  type="checkbox"
+      </Col>
+      <Col
+        lg="12"
+        className="bg-secondary shadow border-0"
+        style={{
+          borderRadius: 25,
+          marginTop: "50px",
+          padding: "25px 10px",
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ fontSize: "45px", margin: "auto" }}>Our Category</h1>
+        <Col
+          lg="12"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+          }}
+        >
+          <Col lg="4" style={{ margin: "10px 0px" }}>
+            <Card className="bg-secondary shadow border-0">
+              <div className="text-muted text-center mt-2 mb-3">
+                <large>Frontend</large>
+              </div>
+              <div className="btn-wrapper text-center">
+                <img
+                  alt="Frontend"
+                  src={require("../../assets/img/undraw_maintenance_rjtm.png")}
+                  style={{ width: "75%", borderRadius: 25 }}
                 />
-                <label
-                  className="custom-control-label"
-                  htmlFor=" customCheckLogin"
-                >
-                  <span className="text-muted">Remember me</span>
-                </label>
+                <Col lg="12">
+                  <small>
+                    Frontend developer builds the user interface part of the
+                    applications
+                  </small>
+                </Col>
+                <div>
+                  <Button className="my-4" color="primary" type="button">
+                    More
+                  </Button>
+                </div>
               </div>
-              <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
-                  Sign in
-                </Button>
+            </Card>
+          </Col>
+          <Col lg="4" style={{ margin: "10px 0px" }}>
+            <Card className="bg-secondary shadow border-0">
+              <div className="text-muted text-center mt-2 mb-3">
+                <large>Backend</large>
               </div>
-            </Form>
-          </CardBody>
-        </Card> */}
-        {/* <Row className="mt-3">
-          <Col xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Forgot password?</small>
-            </a>
+              <div className="btn-wrapper text-center">
+                <img
+                  alt="Backend"
+                  src={require("../../assets/img/undraw_maintenance_rjtm.png")}
+                  style={{ width: "75%", borderRadius: 25 }}
+                />
+                <Col lg="12">
+                  <small>
+                    Backend developer works on the server-side of the
+                    applications
+                  </small>
+                </Col>
+                <div>
+                  <Button className="my-4" color="primary" type="button">
+                    More
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </Col>
-          <Col className="text-right" xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Create new account</small>
-            </a>
+          <Col lg="4" style={{ margin: "10px 0px" }}>
+            <Card className="bg-secondary shadow border-0">
+              <div className="text-muted text-center mt-2 mb-3">
+                <large>Android</large>
+              </div>
+              <div className="btn-wrapper text-center">
+                <img
+                  alt="Backend"
+                  src={require("../../assets/img/undraw_maintenance_rjtm.png")}
+                  style={{ width: "75%", borderRadius: 25 }}
+                />
+                <Col lg="12">
+                  <small>
+                    Android developer builds applications that run on Android
+                    devices
+                  </small>
+                </Col>
+                <div>
+                  <Button className="my-4" color="primary" type="button">
+                    More
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </Col>
-        </Row> */}
+        </Col>
+      </Col>
+      <Col lg="10" style={{ display: "flex", marginTop: "50px" }}>
+        <div style={{ margin: "auto 10px 0px" }}>
+          <h1 style={{ color: "white" }}>
+            Learn with Industry Standard Classes
+          </h1>
+          <p style={{ color: "white" }}>
+            Classes at Edu-Tech are available for those with no programming
+            skills (basic) to professionals.
+          </p>
+        </div>
+        <img
+          alt="class"
+          src={require("../../assets/img/annie-spratt-vGgn0xLdy8s-unsplash.jpg")}
+          style={{ width: "50%" }}
+        />
+      </Col>
+      <Col
+        lg="12"
+        className="bg-info shadow border-0"
+        style={{
+          borderRadius: "10px",
+          marginTop: "50px",
+          padding: "25px 10px",
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ fontSize: "45px", margin: "auto", color: "whitesmoke" }}>
+          Let's Go!
+        </h1>
+        <p style={{ color: "whitesmoke" }}>
+          Learn better with learning paths and boothcamp
+        </p>
+        <Button color="outline-neutral" href="/auth/register">
+          <span className="nav-link-inner--text">Register</span>
+        </Button>
       </Col>
     </>
   );
