@@ -23,6 +23,7 @@ import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import Home from "views/examples/Home.js";
+import About from "views/examples/About.js";
 
 var routes = [
   {
@@ -79,6 +80,13 @@ var routes = [
     name: "Home",
     icon: "ni ni-shop text-info",
     component: <Home />,
+    layout: "/home",
+  },
+  {
+    path: "/about",
+    name: "About",
+    icon: "ni ni-istanbul text-info",
+    component: <About />,
     layout: "/home",
   },
 ];
