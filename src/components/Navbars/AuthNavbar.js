@@ -46,7 +46,7 @@ const AdminNavbar = () => {
               Home
             </span>
           </NavLink>
-          <NavLink className="nav-link-icon" to="/home/index" tag={Link}>
+          <NavLink className="nav-link-icon" to="/home/program" tag={Link}>
             <span className="nav-link-inner--text" style={{ color: "white" }}>
               Program
             </span>

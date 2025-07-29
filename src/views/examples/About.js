@@ -32,7 +32,7 @@ import {
   Col,
 } from "reactstrap";
 
-const Home = () => {
+const About = () => {
   return (
     <>
       {/* <Col lg="10" style={{ display: "flex" }}>
@@ -129,4 +129,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default About;

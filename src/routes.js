@@ -24,6 +24,7 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import Home from "views/examples/Home.js";
 import About from "views/examples/About.js";
+import Program from "views/examples/Program.js";
 
 var routes = [
   {
@@ -80,6 +81,13 @@ var routes = [
     name: "Home",
     icon: "ni ni-shop text-info",
     component: <Home />,
+    layout: "/home",
+  },
+  {
+    path: "/program",
+    name: "program",
+    icon: "ni ni-books text-info",
+    component: <Program />,
     layout: "/home",
   },
   {
