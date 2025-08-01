@@ -31,8 +31,39 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const Home = () => {
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3003/category"
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //   },
+        // }
+      );
+
+      const data = await response.data.result;
+      setCategories(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setCategories([]);
+        console.log("No Category Found");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <Col lg="10" style={{ display: "flex" }}>
@@ -66,81 +97,31 @@ const Home = () => {
             flexWrap: "wrap",
           }}
         >
-          <Col lg="4" style={{ margin: "10px 0px" }}>
-            <Card className="bg-secondary shadow border-0">
-              <div className="text-muted text-center mt-2 mb-3">
-                <large>Frontend</large>
-              </div>
-              <div className="btn-wrapper text-center">
-                <img
-                  alt="Frontend"
-                  src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                  style={{ width: "75%", borderRadius: 25 }}
-                />
-                <Col lg="12">
-                  <small>
-                    Frontend developer builds the user interface part of the
-                    applications
-                  </small>
-                </Col>
-                <div>
-                  <Button className="my-4" color="primary" type="button">
-                    More
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col lg="4" style={{ margin: "10px 0px" }}>
-            <Card className="bg-secondary shadow border-0">
-              <div className="text-muted text-center mt-2 mb-3">
-                <large>Backend</large>
-              </div>
-              <div className="btn-wrapper text-center">
-                <img
-                  alt="Backend"
-                  src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                  style={{ width: "75%", borderRadius: 25 }}
-                />
-                <Col lg="12">
-                  <small>
-                    Backend developer works on the server-side of the
-                    applications
-                  </small>
-                </Col>
-                <div>
-                  <Button className="my-4" color="primary" type="button">
-                    More
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col lg="4" style={{ margin: "10px 0px" }}>
-            <Card className="bg-secondary shadow border-0">
-              <div className="text-muted text-center mt-2 mb-3">
-                <large>Android</large>
-              </div>
-              <div className="btn-wrapper text-center">
-                <img
-                  alt="Backend"
-                  src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                  style={{ width: "75%", borderRadius: 25 }}
-                />
-                <Col lg="12">
-                  <small>
-                    Android developer builds applications that run on Android
-                    devices
-                  </small>
-                </Col>
-                <div>
-                  <Button className="my-4" color="primary" type="button">
-                    More
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </Col>
+          {categories.length !== 0 &&
+            categories.map((item) => (
+              <Col lg="4" style={{ margin: "10px 0px" }}>
+                <Card className="bg-secondary shadow border-0">
+                  <div className="text-muted text-center mt-2 mb-3">
+                    <large>{item.title}</large>
+                  </div>
+                  <div className="btn-wrapper text-center">
+                    <img
+                      alt="Frontend"
+                      src={require("../../assets/img/undraw_maintenance_rjtm.png")}
+                      style={{ width: "75%", borderRadius: 25 }}
+                    />
+                    <Col lg="12">
+                      <small>{item.description}</small>
+                    </Col>
+                    <div>
+                      <Button className="my-4" color="primary" type="button">
+                        More
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+            ))}
         </Col>
       </Col>
       <Col lg="10" style={{ display: "flex", marginTop: "50px" }}>
