@@ -31,257 +31,97 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const Program = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab, setActiveTab] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [programs, setPrograms] = useState([]);
 
   const renderContent = () => {
-    switch (activeTab) {
-      case "tab1":
-        return (
-          <>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Javascript</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Frontend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Frontend developer builds the user interface part of the
-                      applications
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Angular</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Frontend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Frontend developer builds the user interface part of the
-                      applications
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Typescript</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Frontend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Frontend developer builds the user interface part of the
-                      applications
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          </>
-        );
-      case "tab2":
-        return (
-          <>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Javascript</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Backend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Backend developer works on the server-side of the
-                      applications
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Golang</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Backend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Backend developer works on the server-side of the
-                      applications
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Java</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Backend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Backend developer works on the server-side of the
-                      applications
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          </>
-        );
-      case "tab3":
-        return (
-          <>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Kotlin</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Backend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Android developer builds applications that run on Android
-                      devices
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>Java</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Backend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Android developer builds applications that run on Android
-                      devices
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col lg="4" style={{ margin: "10px 0px" }}>
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <large>React Native</large>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <img
-                    alt="Backend"
-                    src={require("../../assets/img/undraw_maintenance_rjtm.png")}
-                    style={{ width: "75%", borderRadius: 25 }}
-                  />
-                  <Col lg="12">
-                    <small>
-                      Android developer builds applications that run on Android
-                      devices
-                    </small>
-                  </Col>
-                  <div>
-                    <Button className="my-4" color="primary" type="button">
-                      More
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          </>
-        );
-      default:
-        return null;
+    return (
+      programs.length !== 0 &&
+      programs.map((item) => (
+        <Col lg="4" style={{ margin: "10px 0px" }}>
+          <Card className="bg-secondary shadow border-0">
+            <div className="text-muted text-center mt-2 mb-3">
+              <large>{item.title}</large>
+            </div>
+            <div className="btn-wrapper text-center">
+              <img
+                alt="Frontend"
+                src={require("../../assets/img/undraw_maintenance_rjtm.png")}
+                style={{ width: "75%", borderRadius: 25 }}
+              />
+              <Col lg="12">
+                <small>{item.description}</small>
+              </Col>
+              <div>
+                <Button className="my-4" color="primary" type="button">
+                  More
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </Col>
+      ))
+    );
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3003/category"
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //   },
+        // }
+      );
+
+      const data = await response.data.result;
+      setCategories(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setCategories([]);
+        console.log("No Category Found");
+      } else {
+        console.log("Error:", error);
+      }
     }
   };
+
+  const fetchPrograms = async (id) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3003/program/category/" + id
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //   },
+        // }
+      );
+      console.log(response);
+      const data = await response.data.result;
+      setPrograms(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setPrograms([]);
+        console.log("No Category Found");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    fetchPrograms(activeTab);
+  }, [activeTab]);
 
   return (
     <>
@@ -309,7 +149,13 @@ const Program = () => {
           alignItems: "center",
         }}
       >
-        <Button color="info" onClick={() => setActiveTab("tab1")}>
+        {categories.length !== 0 &&
+          categories.map((item) => (
+            <Button color="info" onClick={() => setActiveTab(item.id)}>
+              <span className="nav-link-inner--text">{item.title}</span>
+            </Button>
+          ))}
+        {/* <Button color="info" onClick={() => setActiveTab("tab1")}>
           <span className="nav-link-inner--text">Frontend</span>
         </Button>
         <Button color="info" onClick={() => setActiveTab("tab2")}>
@@ -317,7 +163,7 @@ const Program = () => {
         </Button>
         <Button color="info" onClick={() => setActiveTab("tab3")}>
           <span className="nav-link-inner--text">Android</span>
-        </Button>
+        </Button> */}
       </Col>
       <Col
         lg="12"
