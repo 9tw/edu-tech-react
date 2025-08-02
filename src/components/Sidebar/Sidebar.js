@@ -56,6 +56,7 @@ var ps;
 
 const Sidebar = (props) => {
   const [collapseOpen, setCollapseOpen] = useState();
+  const { bgColor, routes, role, logo } = props;
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -71,22 +72,25 @@ const Sidebar = (props) => {
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
-      return (
-        <NavItem key={key}>
-          <NavLink
-            to={prop.layout + prop.path}
-            tag={NavLinkRRD}
-            onClick={closeCollapse}
-          >
-            <i className={prop.icon} />
-            {prop.name}
-          </NavLink>
-        </NavItem>
-      );
+      if (prop.layout === role) {
+        return (
+          <NavItem key={key}>
+            <NavLink
+              to={prop.layout + prop.path}
+              tag={NavLinkRRD}
+              onClick={closeCollapse}
+            >
+              <i className={prop.icon} />
+              {prop.name}
+            </NavLink>
+          </NavItem>
+        );
+      } else {
+        return null;
+      }
     });
   };
 
-  const { bgColor, routes, logo } = props;
   let navbarBrandProps;
   if (logo && logo.innerLink) {
     navbarBrandProps = {
@@ -127,7 +131,7 @@ const Sidebar = (props) => {
         ) : null}
         {/* User */}
         <Nav className="align-items-center d-md-none">
-          <UncontrolledDropdown nav>
+          {/* <UncontrolledDropdown nav>
             <DropdownToggle nav className="nav-link-icon">
               <i className="ni ni-bell-55" />
             </DropdownToggle>
@@ -141,7 +145,7 @@ const Sidebar = (props) => {
               <DropdownItem divider />
               <DropdownItem>Something else here</DropdownItem>
             </DropdownMenu>
-          </UncontrolledDropdown>
+          </UncontrolledDropdown> */}
           <UncontrolledDropdown nav>
             <DropdownToggle nav>
               <Media className="align-items-center">
@@ -154,7 +158,7 @@ const Sidebar = (props) => {
               </Media>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
-              <DropdownItem className="noti-title" header tag="div">
+              {/* <DropdownItem className="noti-title" header tag="div">
                 <h6 className="text-overflow m-0">Welcome!</h6>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>
@@ -173,7 +177,7 @@ const Sidebar = (props) => {
                 <i className="ni ni-support-16" />
                 <span>Support</span>
               </DropdownItem>
-              <DropdownItem divider />
+              <DropdownItem divider /> */}
               <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
                 <i className="ni ni-user-run" />
                 <span>Logout</span>
@@ -230,11 +234,11 @@ const Sidebar = (props) => {
           {/* Navigation */}
           <Nav navbar>{createLinks(routes)}</Nav>
           {/* Divider */}
-          <hr className="my-3" />
+          {/* <hr className="my-3" /> */}
           {/* Heading */}
-          <h6 className="navbar-heading text-muted">Documentation</h6>
+          {/* <h6 className="navbar-heading text-muted">Documentation</h6> */}
           {/* Navigation */}
-          <Nav className="mb-md-3" navbar>
+          {/* <Nav className="mb-md-3" navbar>
             <NavItem>
               <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
                 <i className="ni ni-spaceship" />
@@ -261,7 +265,7 @@ const Sidebar = (props) => {
                 Upgrade to PRO
               </NavLink>
             </NavItem>
-          </Nav>
+          </Nav> */}
         </Collapse>
       </Container>
     </Navbar>

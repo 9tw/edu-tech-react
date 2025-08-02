@@ -18,6 +18,7 @@
 // reactstrap components
 import {
   Badge,
+  Button,
   Card,
   CardHeader,
   CardFooter,
@@ -35,30 +36,38 @@ import {
   Row,
   UncontrolledTooltip,
 } from "reactstrap";
-// core components
-import Header from "components/Headers/Header.js";
 
-const Tables = () => {
+const ProgramManagement = () => {
   return (
     <>
-      <Header />
+      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8"></div>
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* Table */}
         <Row>
           <div className="col">
             <Card className="shadow">
-              <CardHeader className="border-0">
-                <h3 className="mb-0">Card tables</h3>
+              <CardHeader
+                className="border-0"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <h3 className="mb-0">Program</h3>
+                <Button color="info" onClick={(e) => e.preventDefault()}>
+                  <span className="nav-link-inner--text">Add</span>
+                </Button>
               </CardHeader>
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Project</th>
-                    <th scope="col">Budget</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Users</th>
-                    <th scope="col">Completion</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Description</th>
+                    {/* <th scope="col">Users</th>
+                    <th scope="col">Completion</th> */}
                     <th scope="col" />
                   </tr>
                 </thead>
@@ -90,7 +99,7 @@ const Tables = () => {
                         pending
                       </Badge>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="avatar-group">
                         <a
                           className="avatar avatar-sm"
@@ -177,7 +186,7 @@ const Tables = () => {
                           />
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td className="text-right">
                       <UncontrolledDropdown>
                         <DropdownToggle
@@ -195,20 +204,22 @@ const Tables = () => {
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Action
+                            <i className="ni ni-caps-small text-blue" />
+                            Update
                           </DropdownItem>
                           <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Another action
+                            <i className="ni ni-fat-remove text-red" />
+                            Delete
                           </DropdownItem>
-                          <DropdownItem
+                          {/* <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
                             Something else here
-                          </DropdownItem>
+                          </DropdownItem> */}
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
@@ -240,7 +251,7 @@ const Tables = () => {
                         completed
                       </Badge>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="avatar-group">
                         <a
                           className="avatar avatar-sm"
@@ -327,7 +338,7 @@ const Tables = () => {
                           />
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td className="text-right">
                       <UncontrolledDropdown>
                         <DropdownToggle
@@ -345,20 +356,22 @@ const Tables = () => {
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Action
+                            <i className="ni ni-caps-small text-blue" />
+                            Update
                           </DropdownItem>
                           <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Another action
+                            <i className="ni ni-fat-remove text-red" />
+                            Delete
                           </DropdownItem>
-                          <DropdownItem
+                          {/* <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
                             Something else here
-                          </DropdownItem>
+                          </DropdownItem> */}
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
@@ -388,7 +401,7 @@ const Tables = () => {
                         delayed
                       </Badge>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="avatar-group">
                         <a
                           className="avatar avatar-sm"
@@ -475,7 +488,7 @@ const Tables = () => {
                           />
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td className="text-right">
                       <UncontrolledDropdown>
                         <DropdownToggle
@@ -493,20 +506,22 @@ const Tables = () => {
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Action
+                            <i className="ni ni-caps-small text-blue" />
+                            Update
                           </DropdownItem>
                           <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Another action
+                            <i className="ni ni-fat-remove text-red" />
+                            Delete
                           </DropdownItem>
-                          <DropdownItem
+                          {/* <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
                             Something else here
-                          </DropdownItem>
+                          </DropdownItem> */}
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
@@ -538,7 +553,7 @@ const Tables = () => {
                         on schedule
                       </Badge>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="avatar-group">
                         <a
                           className="avatar avatar-sm"
@@ -625,7 +640,7 @@ const Tables = () => {
                           />
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td className="text-right">
                       <UncontrolledDropdown>
                         <DropdownToggle
@@ -643,20 +658,22 @@ const Tables = () => {
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Action
+                            <i className="ni ni-caps-small text-blue" />
+                            Update
                           </DropdownItem>
                           <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Another action
+                            <i className="ni ni-fat-remove text-red" />
+                            Delete
                           </DropdownItem>
-                          <DropdownItem
+                          {/* <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
                             Something else here
-                          </DropdownItem>
+                          </DropdownItem> */}
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
@@ -688,7 +705,7 @@ const Tables = () => {
                         completed
                       </Badge>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="avatar-group">
                         <a
                           className="avatar avatar-sm"
@@ -775,7 +792,7 @@ const Tables = () => {
                           />
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td className="text-right">
                       <UncontrolledDropdown>
                         <DropdownToggle
@@ -793,20 +810,22 @@ const Tables = () => {
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Action
+                            <i className="ni ni-caps-small text-blue" />
+                            Update
                           </DropdownItem>
                           <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
-                            Another action
+                            <i className="ni ni-fat-remove text-red" />
+                            Delete
                           </DropdownItem>
-                          <DropdownItem
+                          {/* <DropdownItem
                             href="#pablo"
                             onClick={(e) => e.preventDefault()}
                           >
                             Something else here
-                          </DropdownItem>
+                          </DropdownItem> */}
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
@@ -869,7 +888,7 @@ const Tables = () => {
           </div>
         </Row>
         {/* Dark table */}
-        <Row className="mt-5">
+        {/* <Row className="mt-5">
           <div className="col">
             <Card className="bg-default shadow">
               <CardHeader className="bg-transparent border-0">
@@ -1639,10 +1658,10 @@ const Tables = () => {
               </Table>
             </Card>
           </div>
-        </Row>
+        </Row> */}
       </Container>
     </>
   );
 };
 
-export default Tables;
+export default ProgramManagement;

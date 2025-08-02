@@ -20,7 +20,9 @@ import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
-import Tables from "views/examples/Tables.js";
+import CategoryManagement from "views/examples/CategoryManagement.js";
+import ProgramManagement from "views/examples/ProgramManagement.js";
+import MaterialManagement from "views/examples/MaterialManagement.js";
 import Icons from "views/examples/Icons.js";
 import Home from "views/examples/Home.js";
 import About from "views/examples/About.js";
@@ -35,17 +37,31 @@ var routes = [
     layout: "/admin",
   },
   {
+    path: "/index",
+    name: "Dashboard",
+    icon: "ni ni-tv-2 text-primary",
+    component: <Index />,
+    layout: "/user",
+  },
+  {
     path: "/icons",
     name: "Icons",
     icon: "ni ni-planet text-blue",
     component: <Icons />,
-    layout: "/admin",
+    layout: "/user",
   },
   {
     path: "/maps",
     name: "Maps",
     icon: "ni ni-pin-3 text-orange",
     component: <Maps />,
+    layout: "/user",
+  },
+  {
+    path: "/user-profile",
+    name: "Admin Profile",
+    icon: "ni ni-single-02 text-yellow",
+    component: <Profile />,
     layout: "/admin",
   },
   {
@@ -53,13 +69,27 @@ var routes = [
     name: "User Profile",
     icon: "ni ni-single-02 text-yellow",
     component: <Profile />,
+    layout: "/user",
+  },
+  {
+    path: "/category-management",
+    name: "Category",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: <CategoryManagement />,
     layout: "/admin",
   },
   {
-    path: "/tables",
-    name: "Tables",
+    path: "/program-management",
+    name: "Program",
     icon: "ni ni-bullet-list-67 text-red",
-    component: <Tables />,
+    component: <ProgramManagement />,
+    layout: "/admin",
+  },
+  {
+    path: "/material-management",
+    name: "Material",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: <MaterialManagement />,
     layout: "/admin",
   },
   {
