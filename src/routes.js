@@ -17,7 +17,7 @@
 */
 import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
-import Maps from "views/examples/Maps.js";
+import Course from "views/examples/Course.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import CategoryManagement from "views/examples/CategoryManagement.js";
@@ -27,6 +27,7 @@ import Icons from "views/examples/Icons.js";
 import Home from "views/examples/Home.js";
 import About from "views/examples/About.js";
 import Program from "views/examples/Program.js";
+import CourseDetail from "views/examples/CourseDetail.js";
 
 var routes = [
   {
@@ -51,10 +52,17 @@ var routes = [
     layout: "/user",
   },
   {
-    path: "/maps",
-    name: "Maps",
-    icon: "ni ni-pin-3 text-orange",
-    component: <Maps />,
+    path: "/course",
+    name: "Course",
+    icon: "ni ni-ruler-pencil text-orange",
+    component: <Course />,
+    layout: "/user",
+  },
+  {
+    path: "/course-detail",
+    name: "Course Detail",
+    icon: "ni ni-ruler-pencil text-orange",
+    component: <CourseDetail />,
     layout: "/user",
   },
   {
