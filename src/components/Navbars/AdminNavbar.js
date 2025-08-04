@@ -33,8 +33,36 @@ import {
   Container,
   Media,
 } from "reactstrap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AdminNavbar = (props) => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3003/auth/logout",
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("name");
+      localStorage.removeItem("role");
+
+      navigate("/home");
+    } catch (error) {
+      alert(error.response?.data?.message || "Logout failed");
+    }
+  };
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -69,7 +97,7 @@ const AdminNavbar = (props) => {
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Jessica Jones
+                      {localStorage.getItem("name")}
                     </span>
                   </Media>
                 </Media>
@@ -95,7 +123,7 @@ const AdminNavbar = (props) => {
                   <span>Support</span>
                 </DropdownItem>
                 <DropdownItem divider /> */}
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+                <DropdownItem href="#pablo" onClick={() => handleLogout()}>
                   <i className="ni ni-user-run" />
                   <span>Logout</span>
                 </DropdownItem>

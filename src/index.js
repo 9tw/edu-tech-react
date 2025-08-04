@@ -30,14 +30,40 @@ import HomeLayout from "layouts/Home.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  return token && role == 0 ? children : <Navigate to="/home" replace />;
+};
+
+const UserRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  return token && role == 1 ? children : <Navigate to="/home" replace />;
+};
+
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/admin/*" element={<AdminLayout />} />
-      <Route path="/user/*" element={<UserLayout />} />
+      <Route
+        path="/admin/*"
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/user/*"
+        element={
+          <UserRoute>
+            <UserLayout />
+          </UserRoute>
+        }
+      />
       <Route path="/auth/*" element={<AuthLayout />} />
       <Route path="/home/*" element={<HomeLayout />} />
-      <Route path="*" element={<Navigate to="/admin/index" replace />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   </BrowserRouter>
 );

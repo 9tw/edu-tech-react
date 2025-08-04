@@ -31,13 +31,47 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post("http://localhost:3003/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Store token or user info if needed
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user_id", res.data.user.id);
+      localStorage.setItem("name", res.data.user.name);
+      localStorage.setItem("role", res.data.user.role_id);
+
+      // Redirect to dashboard or home page
+      if (res.data.user.role_id === 0) {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || "Login failed");
+    }
+  };
+
   return (
     <>
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
-          <CardHeader className="bg-transparent pb-5">
+          {/* <CardHeader className="bg-transparent pb-5">
             <div className="text-muted text-center mt-2 mb-3">
               <small>Sign in with</small>
             </div>
@@ -77,10 +111,10 @@ const Login = () => {
                 <span className="btn-inner--text">Google</span>
               </Button>
             </div>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>Or sign in with credentials</small>
+              <small>Sign in</small>
             </div>
             <Form role="form">
               <FormGroup className="mb-3">
@@ -94,6 +128,10 @@ const Login = () => {
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                   />
                 </InputGroup>
               </FormGroup>
@@ -108,10 +146,14 @@ const Login = () => {
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                   />
                 </InputGroup>
               </FormGroup>
-              <div className="custom-control custom-control-alternative custom-checkbox">
+              {/* <div className="custom-control custom-control-alternative custom-checkbox">
                 <input
                   className="custom-control-input"
                   id=" customCheckLogin"
@@ -123,9 +165,14 @@ const Login = () => {
                 >
                   <span className="text-muted">Remember me</span>
                 </label>
-              </div>
+              </div> */}
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
+                <Button
+                  className="my-4"
+                  color="primary"
+                  type="button"
+                  onClick={handleLogin}
+                >
                   Sign in
                 </Button>
               </div>
@@ -134,19 +181,19 @@ const Login = () => {
         </Card>
         <Row className="mt-3">
           <Col xs="6">
-            <a
+            {/* <a
               className="text-light"
               href="#pablo"
               onClick={(e) => e.preventDefault()}
             >
               <small>Forgot password?</small>
-            </a>
+            </a> */}
           </Col>
           <Col className="text-right" xs="6">
             <a
               className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
+              href="/auth/register"
+              // onClick={(e) => e.preventDefault()}
             >
               <small>Create new account</small>
             </a>
