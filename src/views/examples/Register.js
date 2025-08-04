@@ -31,13 +31,66 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const [isSamePassword, setIsSamePassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    handphone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (formData.password !== formData.confirmPassword) {
+      setIsSamePassword(true);
+      return;
+    } else {
+      setIsSamePassword(false);
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3003/user", {
+        name: formData.name,
+        no_hp: formData.handphone,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("Server response:", response.data);
+      alert("Account created!");
+      setFormData({
+        name: "",
+        handphone: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      navigate("/auth/login");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <>
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
-          <CardHeader className="bg-transparent pb-5">
+          {/* <CardHeader className="bg-transparent pb-5">
             <div className="text-muted text-center mt-2 mb-4">
               <small>Sign up with</small>
             </div>
@@ -77,20 +130,42 @@ const Register = () => {
                 <span className="btn-inner--text">Google</span>
               </Button>
             </div>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>Or sign up with credentials</small>
+              <small>Sign up</small>
             </div>
             <Form role="form">
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-hat-3" />
+                      <i className="ni ni-single-02" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Name" type="text" />
+                  <Input
+                    placeholder="Name"
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-mobile-button" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Handphone"
+                    type="text"
+                    name="handphone"
+                    value={formData.handphone}
+                    onChange={handleChange}
+                  />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -103,7 +178,9 @@ const Register = () => {
                   <Input
                     placeholder="Email"
                     type="email"
-                    autoComplete="new-email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </InputGroup>
               </FormGroup>
@@ -117,17 +194,38 @@ const Register = () => {
                   <Input
                     placeholder="Password"
                     type="password"
-                    autoComplete="new-password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                 </InputGroup>
               </FormGroup>
-              <div className="text-muted font-italic">
-                <small>
-                  password strength:{" "}
-                  <span className="text-success font-weight-700">strong</span>
-                </small>
-              </div>
-              <Row className="my-4">
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-lock-circle-open" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Confirm Password"
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                  />
+                </InputGroup>
+              </FormGroup>
+              {isSamePassword ? (
+                <div className="text-muted font-italic">
+                  <small>
+                    <span className="text-danger font-weight-700">
+                      Passwords do not match
+                    </span>
+                  </small>
+                </div>
+              ) : null}
+              {/* <Row className="my-4">
                 <Col xs="12">
                   <div className="custom-control custom-control-alternative custom-checkbox">
                     <input
@@ -148,9 +246,14 @@ const Register = () => {
                     </label>
                   </div>
                 </Col>
-              </Row>
+              </Row> */}
               <div className="text-center">
-                <Button className="mt-4" color="primary" type="button">
+                <Button
+                  className="mt-4"
+                  color="primary"
+                  type="button"
+                  onClick={handleSubmit}
+                >
                   Create account
                 </Button>
               </div>

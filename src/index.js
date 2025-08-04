@@ -37,7 +37,7 @@ root.render(
       <Route path="/user/*" element={<UserLayout />} />
       <Route path="/auth/*" element={<AuthLayout />} />
       <Route path="/home/*" element={<HomeLayout />} />
-      <Route path="*" element={<Navigate to="/admin/index" replace />} />
+      <Route path="*" element={<Navigate to="/home/index" replace />} />
     </Routes>
   </BrowserRouter>
 );
