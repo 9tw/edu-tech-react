@@ -70,12 +70,13 @@ const CourseDetail = () => {
   const fetchMaterials = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3003/material/program/" + id
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //   },
-        // }
+        "http://localhost:3003/material/program/" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       const data = await response.data.result;

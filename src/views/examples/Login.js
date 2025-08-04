@@ -31,8 +31,42 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post("http://localhost:3003/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Store token or user info if needed
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user_id", res.data.user.id);
+      localStorage.setItem("name", res.data.user.name);
+      localStorage.setItem("role", res.data.user.role_id);
+
+      // Redirect to dashboard or home page
+      if (res.data.user.role_id === 0) {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || "Login failed");
+    }
+  };
+
   return (
     <>
       <Col lg="5" md="7">
@@ -94,6 +128,10 @@ const Login = () => {
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                   />
                 </InputGroup>
               </FormGroup>
@@ -108,6 +146,10 @@ const Login = () => {
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                   />
                 </InputGroup>
               </FormGroup>
@@ -125,7 +167,12 @@ const Login = () => {
                 </label>
               </div> */}
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
+                <Button
+                  className="my-4"
+                  color="primary"
+                  type="button"
+                  onClick={handleLogin}
+                >
                   Sign in
                 </Button>
               </div>

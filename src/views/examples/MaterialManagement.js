@@ -44,14 +44,12 @@ const MaterialManagement = () => {
 
   const fetchMaterials = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3003/material"
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //   },
-        // }
-      );
+      const response = await axios.get("http://localhost:3003/material", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       const data = await response.data.result;
       setMaterials(data);
