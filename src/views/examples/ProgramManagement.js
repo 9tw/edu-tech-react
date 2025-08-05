@@ -48,13 +48,14 @@ import { useState, useEffect } from "react";
 import Modal from "../../components/Modal/Modal.js";
 
 const ProgramManagement = () => {
+  const [id, setId] = useState();
   const [categories, setCategories] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [formData, setFormData] = useState({
-    category_id: 0,
+    category: 0,
     title: "",
     description: "",
   });
@@ -102,6 +103,117 @@ const ProgramManagement = () => {
       } else {
         console.log("Error:", error);
       }
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleUpdate = (id, cat, title, desc) => {
+    setId(id);
+    setFormData({
+      category: cat,
+      title: title,
+      description: desc,
+    });
+    setIsModalUpdateOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    setId(id);
+    setIsModalDeleteOpen(true);
+  };
+
+  const submitCreate = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3003/program",
+        {
+          category_id: formData.category,
+          title: formData.title,
+          description: formData.description,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Program created!");
+      setFormData({
+        category: "",
+        title: "",
+        description: "",
+      });
+      setIsModalAddOpen(false);
+      fetchCategories();
+      fetchPrograms();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const submitUpdate = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/program/" + id,
+        {
+          category_id: formData.category,
+          title: formData.title,
+          description: formData.description,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Program updated!");
+      setFormData({
+        category: 0,
+        title: "",
+        description: "",
+      });
+      setIsModalUpdateOpen(false);
+      fetchCategories();
+      fetchPrograms();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const submitDelete = async () => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:3003/program/" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Program deleted!");
+      setIsModalDeleteOpen(false);
+      fetchCategories();
+      fetchPrograms();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -269,14 +381,21 @@ const ProgramManagement = () => {
                             <DropdownMenu className="dropdown-menu-arrow" right>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={() => setIsModalUpdateOpen(true)}
+                                onClick={() =>
+                                  handleUpdate(
+                                    item.id,
+                                    item.category.id,
+                                    item.title,
+                                    item.description
+                                  )
+                                }
                               >
                                 <i className="ni ni-caps-small text-blue" />
                                 Update
                               </DropdownItem>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={() => setIsModalDeleteOpen(true)}
+                                onClick={() => handleDelete(item.id)}
                               >
                                 <i className="ni ni-fat-remove text-red" />
                                 Delete
@@ -1139,12 +1258,14 @@ const ProgramManagement = () => {
                   placeholder="Category"
                   type="select"
                   name="category"
-                  value={formData.category_id}
-                  // onChange={handleChange}
+                  value={formData.category}
+                  onChange={handleChange}
                 >
                   {categories.length !== 0 &&
                     categories.map((item) => (
-                      <option value={item.id}>{item.title}</option>
+                      <option key={item.id} value={item.id}>
+                        {item.title}
+                      </option>
                     ))}
                 </Input>
               </InputGroup>
@@ -1161,7 +1282,7 @@ const ProgramManagement = () => {
                   type="text"
                   name="title"
                   value={formData.title}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                 />
               </InputGroup>
             </FormGroup>
@@ -1178,7 +1299,7 @@ const ProgramManagement = () => {
                   name="description"
                   rows="5"
                   value={formData.description}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                 />
               </InputGroup>
             </FormGroup>
@@ -1196,7 +1317,7 @@ const ProgramManagement = () => {
                 className="mt-4"
                 color="primary"
                 type="button"
-                // onClick={handleSubmit}
+                onClick={submitCreate}
               >
                 Create
               </Button>
@@ -1224,12 +1345,14 @@ const ProgramManagement = () => {
                   placeholder="Category"
                   type="select"
                   name="category"
-                  value={formData.category_id}
-                  // onChange={handleChange}
+                  value={formData.category}
+                  onChange={handleChange}
                 >
                   {categories.length !== 0 &&
                     categories.map((item) => (
-                      <option value={item.id}>{item.title}</option>
+                      <option key={item.id} value={item.id}>
+                        {item.title}
+                      </option>
                     ))}
                 </Input>
               </InputGroup>
@@ -1246,7 +1369,7 @@ const ProgramManagement = () => {
                   type="text"
                   name="title"
                   value={formData.title}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                 />
               </InputGroup>
             </FormGroup>
@@ -1263,7 +1386,7 @@ const ProgramManagement = () => {
                   name="description"
                   rows="5"
                   value={formData.description}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                 />
               </InputGroup>
             </FormGroup>
@@ -1281,7 +1404,7 @@ const ProgramManagement = () => {
                 className="mt-4"
                 color="primary"
                 type="button"
-                // onClick={handleSubmit}
+                onClick={submitUpdate}
               >
                 Update
               </Button>
@@ -1302,7 +1425,7 @@ const ProgramManagement = () => {
               className="mt-4"
               color="danger"
               type="button"
-              // onClick={handleSubmit}
+              onClick={submitDelete}
             >
               Delete
             </Button>
