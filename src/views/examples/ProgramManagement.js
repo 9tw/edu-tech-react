@@ -21,11 +21,18 @@ import {
   Button,
   Card,
   CardHeader,
+  CardBody,
   CardFooter,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
+  FormGroup,
+  Form,
+  Input,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroup,
   Media,
   Pagination,
   PaginationItem,
@@ -38,9 +45,42 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Modal from "../../components/Modal/Modal.js";
 
 const ProgramManagement = () => {
+  const [categories, setCategories] = useState([]);
   const [programs, setPrograms] = useState([]);
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    category_id: 0,
+    title: "",
+    description: "",
+  });
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3003/category"
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //   },
+        // }
+      );
+
+      const data = await response.data.result;
+      setCategories(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setCategories([]);
+        console.log("No Category Found");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
 
   const fetchPrograms = async () => {
     try {
@@ -66,6 +106,7 @@ const ProgramManagement = () => {
   };
 
   useEffect(() => {
+    fetchCategories();
     fetchPrograms();
   }, []);
 
@@ -87,7 +128,7 @@ const ProgramManagement = () => {
                 }}
               >
                 <h3 className="mb-0">Program</h3>
-                <Button color="info" onClick={(e) => e.preventDefault()}>
+                <Button color="info" onClick={() => setIsModalAddOpen(true)}>
                   <span className="nav-link-inner--text">Add</span>
                 </Button>
               </CardHeader>
@@ -228,14 +269,14 @@ const ProgramManagement = () => {
                             <DropdownMenu className="dropdown-menu-arrow" right>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={(e) => e.preventDefault()}
+                                onClick={() => setIsModalUpdateOpen(true)}
                               >
                                 <i className="ni ni-caps-small text-blue" />
                                 Update
                               </DropdownItem>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={(e) => e.preventDefault()}
+                                onClick={() => setIsModalDeleteOpen(true)}
                               >
                                 <i className="ni ni-fat-remove text-red" />
                                 Delete
@@ -1081,6 +1122,201 @@ const ProgramManagement = () => {
           </div>
         </Row> */}
       </Container>
+      <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Create Program</small>
+          </div>
+          <Form role="form">
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Category"
+                  type="select"
+                  name="category"
+                  value={formData.category_id}
+                  // onChange={handleChange}
+                >
+                  {categories.length !== 0 &&
+                    categories.map((item) => (
+                      <option value={item.id}>{item.title}</option>
+                    ))}
+                </Input>
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Title"
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  // onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-mobile-button" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Description"
+                  type="textarea"
+                  name="description"
+                  rows="5"
+                  value={formData.description}
+                  // onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            {/* {isSamePassword ? (
+                <div className="text-muted font-italic">
+                  <small>
+                    <span className="text-danger font-weight-700">
+                      Passwords do not match
+                    </span>
+                  </small>
+                </div>
+              ) : null} */}
+            <div className="text-center">
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                // onClick={handleSubmit}
+              >
+                Create
+              </Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Modal>
+      <Modal
+        isOpen={isModalUpdateOpen}
+        onClose={() => setIsModalUpdateOpen(false)}
+      >
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Update Program</small>
+          </div>
+          <Form role="form">
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Category"
+                  type="select"
+                  name="category"
+                  value={formData.category_id}
+                  // onChange={handleChange}
+                >
+                  {categories.length !== 0 &&
+                    categories.map((item) => (
+                      <option value={item.id}>{item.title}</option>
+                    ))}
+                </Input>
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Title"
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  // onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-mobile-button" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Description"
+                  type="textarea"
+                  name="description"
+                  rows="5"
+                  value={formData.description}
+                  // onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            {/* {isSamePassword ? (
+                <div className="text-muted font-italic">
+                  <small>
+                    <span className="text-danger font-weight-700">
+                      Passwords do not match
+                    </span>
+                  </small>
+                </div>
+              ) : null} */}
+            <div className="text-center">
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                // onClick={handleSubmit}
+              >
+                Update
+              </Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Modal>
+      <Modal
+        isOpen={isModalDeleteOpen}
+        onClose={() => setIsModalDeleteOpen(false)}
+      >
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Delete this program?</small>
+          </div>
+          <div className="text-center">
+            <Button
+              className="mt-4"
+              color="danger"
+              type="button"
+              // onClick={handleSubmit}
+            >
+              Delete
+            </Button>
+            <Button
+              className="mt-4"
+              color="secondary"
+              type="button"
+              onClick={() => setIsModalDeleteOpen(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </CardBody>
+      </Modal>
     </>
   );
 };
