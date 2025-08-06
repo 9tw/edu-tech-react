@@ -240,15 +240,17 @@ const CourseDetail = () => {
               </CardHeader>
               <CardBody>
                 {materials.length !== 0 &&
-                  materials.map((item) => (
+                  materials.map((item, index) => (
                     <div className="text-center">
-                      <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                        <i className="fas fa-chart-bar" />
-                      </div>
+                      {index !== 0 ? (
+                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                          <i className="ni ni-bold-down" />
+                        </div>
+                      ) : null}
                       <h3>{item.title}</h3>
                       <div className="h5 font-weight-300">
                         <i className="ni location_pin mr-2" />
-                        Bucharest, Romania
+                        {item.description}
                       </div>
                     </div>
                   ))}
