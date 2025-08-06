@@ -41,7 +41,7 @@ const CourseDetail = () => {
   const [programs, setPrograms] = useState([]);
   const [materials, setMaterials] = useState([]);
 
-  const fetchPrograms = async () => {
+  const fetchProgram = async () => {
     try {
       const response = await axios.get(
         "http://localhost:3003/program/" + id
@@ -51,9 +51,6 @@ const CourseDetail = () => {
         //   },
         // }
       );
-
-      console.log(id);
-      console.log(response.data.data);
 
       const data = await response.data.result;
       setPrograms(data);
@@ -92,7 +89,7 @@ const CourseDetail = () => {
   };
 
   useEffect(() => {
-    fetchPrograms();
+    fetchProgram();
     fetchMaterials();
   }, []);
 

@@ -23,6 +23,7 @@ import Login from "views/examples/Login.js";
 import CategoryManagement from "views/examples/CategoryManagement.js";
 import ProgramManagement from "views/examples/ProgramManagement.js";
 import MaterialManagement from "views/examples/MaterialManagement.js";
+import MaterialAdd from "views/examples/MaterialAdd.js";
 import Icons from "views/examples/Icons.js";
 import Home from "views/examples/Home.js";
 import About from "views/examples/About.js";
@@ -98,6 +99,13 @@ var routes = [
     name: "Material",
     icon: "ni ni-bullet-list-67 text-red",
     component: <MaterialManagement />,
+    layout: "/admin",
+  },
+  {
+    path: "/materials",
+    name: "Materials",
+    icon: "ni ni-books text-blue",
+    component: <MaterialAdd />,
     layout: "/admin",
   },
   {

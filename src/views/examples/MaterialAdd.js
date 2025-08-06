@@ -21,8 +21,15 @@ import {
   Button,
   Card,
   CardHeader,
-  CardBody,
   CardFooter,
+  CardBody,
+  Col,
+  FormGroup,
+  Form,
+  Input,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroup,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
@@ -39,27 +46,70 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Modal from "../../components/Modal/Modal.js";
+import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { useLocation } from "react-router-dom";
 
 const MaterialManagement = () => {
-  const [id, setId] = useState();
-  const [materials, setMaterials] = useState([]);
-  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
 
-  const fetchMaterials = async () => {
+  const id = params.get("id");
+
+  const [programs, setPrograms] = useState([]);
+  const [material, setMaterial] = useState([]);
+  const [formData, setFormData] = useState({
+    program: 0,
+    title: "",
+    description: "",
+    article: "Hello, World...",
+  });
+
+  const fetchPrograms = async () => {
     try {
-      const response = await axios.get("http://localhost:3003/material", {
+      const response = await axios.get(
+        "http://localhost:3003/program"
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //   },
+        // }
+      );
+
+      const data = await response.data.result;
+      setPrograms(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setPrograms([]);
+        console.log("No Program Found");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
+
+  const fetchMaterial = async () => {
+    try {
+      const response = await axios.get("http://localhost:3003/material/" + id, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      const data = await response.data.result;
-      setMaterials(data);
+      const data = await response.data.result[0];
+      // setMaterial(data);
+      setFormData({
+        program: data.program?.id,
+        title: data.title,
+        description: data.description,
+        article: data.article,
+      });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
-        setMaterials([]);
+        setMaterial();
         console.log("No Material Found");
       } else {
         console.log("Error:", error);
@@ -67,15 +117,23 @@ const MaterialManagement = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    setId(id);
-    setIsModalDeleteOpen(true);
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const submitDelete = async () => {
+  const submitCreate = async () => {
     try {
-      const response = await axios.delete(
-        "http://localhost:3003/material/" + id,
+      const response = await axios.post(
+        "http://localhost:3003/material",
+        {
+          program_id: formData.program,
+          title: formData.title,
+          description: formData.description,
+          article: formData.article,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -85,9 +143,35 @@ const MaterialManagement = () => {
       );
 
       console.log("Server response:", response.data);
-      alert("Material deleted!");
-      setIsModalDeleteOpen(false);
-      fetchMaterials();
+      alert("Material created!");
+      navigate("/admin/material-management");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const submitUpdate = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/material/" + id,
+        {
+          program_id: formData.program,
+          title: formData.title,
+          description: formData.description,
+          article: formData.article,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Material updated!");
+      navigate("/admin/material-management");
     } catch (error) {
       console.error("Error submitting form:", error);
       alert(error.response?.data?.message || "Something went wrong");
@@ -95,7 +179,11 @@ const MaterialManagement = () => {
   };
 
   useEffect(() => {
-    fetchMaterials();
+    if (id) {
+      fetchMaterial();
+    }
+
+    fetchPrograms();
   }, []);
 
   return (
@@ -115,174 +203,118 @@ const MaterialManagement = () => {
                   alignItems: "center",
                 }}
               >
-                <h3 className="mb-0">Material</h3>
-                <Button color="info" href="/admin/materials">
-                  <span className="nav-link-inner--text">Add</span>
-                </Button>
+                <h3 className="mb-0">{id ? "Update" : "Create"} Material</h3>
               </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Program</th>
-                    <th scope="col">Description</th>
-                    {/* <th scope="col">Users</th>
-                    <th scope="col">Completion</th> */}
-                    <th scope="col" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {materials.length !== 0 &&
-                    materials.map((item) => (
-                      <tr>
-                        <th scope="row">
-                          {/* <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            src={require("../../assets/img/theme/bootstrap.jpg")}
-                          />
-                        </a>
-                        <Media> */}
-                          <span className="mb-0 text-sm">{item.title}</span>
-                          {/* </Media>
-                      </Media> */}
-                        </th>
-                        <td>{item.program.title}</td>
-                        <td>{item.description}</td>
-                        {/* <td>
-                      <div className="avatar-group">
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip742438047"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-1-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip742438047"
-                        >
-                          Ryan Tompson
-                        </UncontrolledTooltip>
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip941738690"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-2-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip941738690"
-                        >
-                          Romina Hadid
-                        </UncontrolledTooltip>
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip804044742"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-3-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip804044742"
-                        >
-                          Alexander Smith
-                        </UncontrolledTooltip>
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip996637554"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip996637554"
-                        >
-                          Jessica Doe
-                        </UncontrolledTooltip>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">60%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="60"
-                            barClassName="bg-danger"
-                          />
-                        </div>
-                      </div>
-                    </td> */}
-                        <td className="text-right">
-                          <UncontrolledDropdown>
-                            <DropdownToggle
-                              className="btn-icon-only text-light"
-                              href="#pablo"
-                              role="button"
-                              size="sm"
-                              color=""
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              <i className="fas fa-ellipsis-v" />
-                            </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu-arrow" right>
-                              <DropdownItem
-                                href={`/admin/materials?id=${item.id}`}
-                                // onClick={(e) => e.preventDefault()}
-                              >
-                                <i className="ni ni-caps-small text-blue" />
-                                Update
-                              </DropdownItem>
-                              <DropdownItem
-                                href="#pablo"
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <i className="ni ni-fat-remove text-red" />
-                                Delete
-                              </DropdownItem>
-                              {/* <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Something else here
-                          </DropdownItem> */}
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
               <CardFooter className="py-4">
+                {/* <div className="text-center text-muted mb-4">
+                  <small>Create Program</small>
+                </div> */}
+                <Form role="form">
+                  <Row>
+                    <Col lg="2">
+                      <FormGroup>
+                        <InputGroup className="input-group-alternative mb-3">
+                          {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                          <Input
+                            placeholder="Program"
+                            type="select"
+                            name="program"
+                            value={formData.program}
+                            onChange={handleChange}
+                          >
+                            {programs.length !== 0 &&
+                              programs.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.title}
+                                </option>
+                              ))}
+                          </Input>
+                        </InputGroup>
+                      </FormGroup>
+                    </Col>
+                    <Col lg="2">
+                      <FormGroup>
+                        <InputGroup className="input-group-alternative mb-3">
+                          {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                          <Input
+                            placeholder="Title"
+                            type="text"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </Col>
+                    <Col lg="8">
+                      <FormGroup>
+                        <InputGroup className="input-group-alternative mb-3">
+                          {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-mobile-button" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                          <Input
+                            placeholder="Description"
+                            type="text"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <ReactQuill
+                    value={formData.article}
+                    onChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        article: value,
+                      }))
+                    }
+                  />
+                  {/* {isSamePassword ? (
+                <div className="text-muted font-italic">
+                  <small>
+                    <span className="text-danger font-weight-700">
+                      Passwords do not match
+                    </span>
+                  </small>
+                </div>
+              ) : null} */}
+                  <div className="text-center">
+                    {id ? (
+                      <Button
+                        className="mt-4"
+                        color="primary"
+                        type="button"
+                        onClick={submitUpdate}
+                      >
+                        Update
+                      </Button>
+                    ) : (
+                      <Button
+                        className="mt-4"
+                        color="primary"
+                        type="button"
+                        onClick={submitCreate}
+                      >
+                        Create
+                      </Button>
+                    )}
+                  </div>
+                </Form>
+              </CardFooter>
+              {/* <CardFooter className="py-4">
                 <nav aria-label="...">
                   <Pagination
                     className="pagination justify-content-end mb-0"
@@ -333,7 +365,7 @@ const MaterialManagement = () => {
                     </PaginationItem>
                   </Pagination>
                 </nav>
-              </CardFooter>
+              </CardFooter> */}
             </Card>
           </div>
         </Row>
@@ -1110,34 +1142,6 @@ const MaterialManagement = () => {
           </div>
         </Row> */}
       </Container>
-      <Modal
-        isOpen={isModalDeleteOpen}
-        onClose={() => setIsModalDeleteOpen(false)}
-      >
-        <CardBody className="px-lg-5 py-lg-5">
-          <div className="text-center text-muted mb-4">
-            <small>Delete this program?</small>
-          </div>
-          <div className="text-center">
-            <Button
-              className="mt-4"
-              color="danger"
-              type="button"
-              onClick={submitDelete}
-            >
-              Delete
-            </Button>
-            <Button
-              className="mt-4"
-              color="secondary"
-              type="button"
-              onClick={() => setIsModalDeleteOpen(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        </CardBody>
-      </Modal>
     </>
   );
 };
