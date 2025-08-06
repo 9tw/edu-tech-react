@@ -21,11 +21,18 @@ import {
   Button,
   Card,
   CardHeader,
+  CardBody,
   CardFooter,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
+  FormGroup,
+  Form,
+  Input,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroup,
   Media,
   Pagination,
   PaginationItem,
@@ -38,9 +45,18 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Modal from "../../components/Modal/Modal.js";
 
 const CategoryManagement = () => {
+  const [id, setId] = useState();
   const [categories, setCategories] = useState([]);
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+  });
 
   const fetchCategories = async () => {
     try {
@@ -62,6 +78,109 @@ const CategoryManagement = () => {
       } else {
         console.log("Error:", error);
       }
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleUpdate = (id, title, desc) => {
+    setId(id);
+    setFormData({
+      title: title,
+      description: desc,
+    });
+    setIsModalUpdateOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    setId(id);
+    setIsModalDeleteOpen(true);
+  };
+
+  const submitCreate = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3003/category",
+        {
+          title: formData.title,
+          description: formData.description,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Category created!");
+      setFormData({
+        title: "",
+        description: "",
+      });
+      setIsModalAddOpen(false);
+      fetchCategories();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const submitUpdate = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/category/" + id,
+        {
+          title: formData.title,
+          description: formData.description,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Category updated!");
+      setFormData({
+        title: "",
+        description: "",
+      });
+      setIsModalUpdateOpen(false);
+      fetchCategories();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const submitDelete = async () => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:3003/category/" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+      alert("Category deleted!");
+      setIsModalDeleteOpen(false);
+      fetchCategories();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -87,7 +206,7 @@ const CategoryManagement = () => {
                 }}
               >
                 <h3 className="mb-0">Category</h3>
-                <Button color="info" onClick={(e) => e.preventDefault()}>
+                <Button color="info" onClick={() => setIsModalAddOpen(true)}>
                   <span className="nav-link-inner--text">Add</span>
                 </Button>
               </CardHeader>
@@ -233,14 +352,20 @@ const CategoryManagement = () => {
                             <DropdownMenu className="dropdown-menu-arrow" right>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={(e) => e.preventDefault()}
+                                onClick={() =>
+                                  handleUpdate(
+                                    item.id,
+                                    item.title,
+                                    item.description
+                                  )
+                                }
                               >
                                 <i className="ni ni-caps-small text-blue" />
                                 Update
                               </DropdownItem>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={(e) => e.preventDefault()}
+                                onClick={() => handleDelete(item.id)}
                               >
                                 <i className="ni ni-fat-remove text-red" />
                                 Delete
@@ -1086,6 +1211,159 @@ const CategoryManagement = () => {
           </div>
         </Row> */}
       </Container>
+      <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Create Category</small>
+          </div>
+          <Form role="form">
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Title"
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-mobile-button" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Description"
+                  type="textarea"
+                  name="description"
+                  rows="5"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            {/* {isSamePassword ? (
+                <div className="text-muted font-italic">
+                  <small>
+                    <span className="text-danger font-weight-700">
+                      Passwords do not match
+                    </span>
+                  </small>
+                </div>
+              ) : null} */}
+            <div className="text-center">
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                onClick={submitCreate}
+              >
+                Create
+              </Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Modal>
+      <Modal
+        isOpen={isModalUpdateOpen}
+        onClose={() => setIsModalUpdateOpen(false)}
+      >
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Update Category</small>
+          </div>
+          <Form role="form">
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-single-02" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Title"
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                {/* <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="ni ni-mobile-button" />
+                  </InputGroupText>
+                </InputGroupAddon> */}
+                <Input
+                  placeholder="Description"
+                  type="textarea"
+                  name="description"
+                  rows="5"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </FormGroup>
+            {/* {isSamePassword ? (
+                <div className="text-muted font-italic">
+                  <small>
+                    <span className="text-danger font-weight-700">
+                      Passwords do not match
+                    </span>
+                  </small>
+                </div>
+              ) : null} */}
+            <div className="text-center">
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                onClick={submitUpdate}
+              >
+                Update
+              </Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Modal>
+      <Modal
+        isOpen={isModalDeleteOpen}
+        onClose={() => setIsModalDeleteOpen(false)}
+      >
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Delete this category?</small>
+          </div>
+          <div className="text-center">
+            <Button
+              className="mt-4"
+              color="danger"
+              type="button"
+              onClick={submitDelete}
+            >
+              Delete
+            </Button>
+            <Button
+              className="mt-4"
+              color="secondary"
+              type="button"
+              onClick={() => setIsModalDeleteOpen(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </CardBody>
+      </Modal>
     </>
   );
 };
