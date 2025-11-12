@@ -29,6 +29,7 @@ import Home from "views/examples/Home.js";
 import About from "views/examples/About.js";
 import Program from "views/examples/Program.js";
 import CourseDetail from "views/examples/CourseDetail.js";
+import MaterialDetail from "views/examples/MaterialDetail";
 
 var routes = [
   {
@@ -65,20 +66,15 @@ var routes = [
     icon: "ni ni-ruler-pencil text-orange",
     component: <CourseDetail />,
     layout: "/user",
+    sub: true,
   },
   {
-    path: "/user-profile",
-    name: "Admin Profile",
-    icon: "ni ni-single-02 text-yellow",
-    component: <Profile />,
-    layout: "/admin",
-  },
-  {
-    path: "/user-profile",
-    name: "User Profile",
-    icon: "ni ni-single-02 text-yellow",
-    component: <Profile />,
+    path: "/material-detail",
+    name: "Material Detail",
+    icon: "ni ni-ruler-pencil text-orange",
+    component: <MaterialDetail />,
     layout: "/user",
+    sub: true,
   },
   {
     path: "/category-management",
@@ -107,6 +103,21 @@ var routes = [
     icon: "ni ni-books text-blue",
     component: <MaterialAdd />,
     layout: "/admin",
+    sub: true,
+  },
+  {
+    path: "/user-profile",
+    name: "Admin Profile",
+    icon: "ni ni-single-02 text-yellow",
+    component: <Profile />,
+    layout: "/admin",
+  },
+  {
+    path: "/user-profile",
+    name: "User Profile",
+    icon: "ni ni-single-02 text-yellow",
+    component: <Profile />,
+    layout: "/user",
   },
   {
     path: "/login",

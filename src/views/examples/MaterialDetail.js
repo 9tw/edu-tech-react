@@ -32,42 +32,23 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import DOMPurify from "dompurify";
 
-const CourseDetail = () => {
+const MaterialDetail = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
 
-  const id = params.get("id");
-  const [programs, setPrograms] = useState([]);
-  const [materials, setMaterials] = useState([]);
+  const program_id = params.get("program");
+  const seq = params.get("no");
+  const next = parseInt(seq) + 1;
 
-  const fetchProgram = async () => {
+  const [material, setMaterial] = useState();
+  const [lastSeq, setLastSeq] = useState();
+
+  const fetchMaterial = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3003/program/" + id
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //   },
-        // }
-      );
-
-      const data = await response.data.result;
-      setPrograms(data);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        setPrograms([]);
-        console.log("No Program Found");
-      } else {
-        console.log("Error:", error);
-      }
-    }
-  };
-
-  const fetchMaterials = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3003/material/program/" + id,
+        `http://localhost:3003/material/seq?program_id=${program_id}&seq=${seq}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -76,11 +57,35 @@ const CourseDetail = () => {
         }
       );
 
-      const data = await response.data.result;
-      setMaterials(data);
+      const data = await response.data.result[0];
+      setMaterial(data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
-        setMaterials([]);
+        setMaterial();
+        console.log("No Material Found");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
+
+  const fetchMaterialSeq = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3003/material/last-seq?program_id=${program_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const data = await response.data.result.seq;
+      setLastSeq(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setLastSeq();
         console.log("No Material Found");
       } else {
         console.log("Error:", error);
@@ -89,8 +94,8 @@ const CourseDetail = () => {
   };
 
   useEffect(() => {
-    fetchProgram();
-    fetchMaterials();
+    fetchMaterial();
+    fetchMaterialSeq();
   }, []);
 
   return (
@@ -114,10 +119,10 @@ const CourseDetail = () => {
           <Row>
             <Col lg="7" md="10">
               <h1 className="display-2 text-white">
-                {programs.length !== 0 && programs[0].title}
+                {material && material.title}
               </h1>
               <p className="text-white mt-0 mb-5">
-                {programs.length !== 0 && programs[0].description}
+                {material && material.description}
               </p>
               {/* <Button
                 color="info"
@@ -224,7 +229,7 @@ const CourseDetail = () => {
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">
                   <Col xs="8">
-                    <h3 className="mb-0">Materials</h3>
+                    <h3 className="mb-0">Article</h3>
                   </Col>
                   {/* <Col className="text-right" xs="4">
                     <Button
@@ -239,25 +244,11 @@ const CourseDetail = () => {
                 </Row>
               </CardHeader>
               <CardBody>
-                {materials.length !== 0 &&
-                  materials.map((item, index) => (
-                    <div className="text-center">
-                      {index !== 0 ? (
-                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="ni ni-bold-down" />
-                        </div>
-                      ) : null}
-                      <a
-                        href={`/user/material-detail?program=${item.program_id}&no=${item.seq}`}
-                      >
-                        <h3>{item.title}</h3>
-                      </a>
-                      <div className="h5 font-weight-300">
-                        <i className="ni location_pin mr-2" />
-                        {item.description}
-                      </div>
-                    </div>
-                  ))}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(material && material.article),
+                  }}
+                />
                 {/* <Form>
                   <h6 className="heading-small text-muted mb-4">
                     User information
@@ -434,9 +425,23 @@ const CourseDetail = () => {
             </Card>
           </Col>
         </Row>
+        {lastSeq === next ? (
+          <div
+            className="d-flex justify-content-end"
+            style={{ paddingRight: 0 }}
+          >
+            <Button
+              color="info"
+              className="mt-2"
+              href={`/user/material-detail?program=${program_id}&no=${next}`}
+            >
+              <span className="nav-link-inner--text">Next</span>
+            </Button>
+          </div>
+        ) : null}
       </Container>
     </>
   );
 };
 
-export default CourseDetail;
+export default MaterialDetail;
