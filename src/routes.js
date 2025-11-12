@@ -29,6 +29,7 @@ import Home from "views/examples/Home.js";
 import About from "views/examples/About.js";
 import Program from "views/examples/Program.js";
 import CourseDetail from "views/examples/CourseDetail.js";
+import MaterialDetail from "views/examples/MaterialDetail";
 
 var routes = [
   {
@@ -64,6 +65,14 @@ var routes = [
     name: "Course Detail",
     icon: "ni ni-ruler-pencil text-orange",
     component: <CourseDetail />,
+    layout: "/user",
+    sub: true,
+  },
+  {
+    path: "/material-detail",
+    name: "Material Detail",
+    icon: "ni ni-ruler-pencil text-orange",
+    component: <MaterialDetail />,
     layout: "/user",
     sub: true,
   },
