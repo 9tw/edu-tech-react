@@ -46,6 +46,7 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Modal from "../../components/Modal/Modal.js";
+import Header from "components/Headers/CustomHeader.js";
 
 const ProgramManagement = () => {
   const [id, setId] = useState();
@@ -224,7 +225,10 @@ const ProgramManagement = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8"></div>
+      <Header
+        title="Program Management"
+        description="This is the program management page. You can add, update and delete the course program here."
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* Table */}

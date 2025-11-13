@@ -46,6 +46,7 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Modal from "../../components/Modal/Modal.js";
+import Header from "components/Headers/CustomHeader.js";
 
 const CategoryManagement = () => {
   const [id, setId] = useState();
@@ -190,7 +191,10 @@ const CategoryManagement = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8"></div>
+      <Header
+        title="Category Management"
+        description="This is the category management page. You can add, update and delete the course category here."
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* Table */}

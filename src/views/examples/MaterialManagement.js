@@ -40,6 +40,7 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Modal from "../../components/Modal/Modal.js";
+import Header from "components/Headers/CustomHeader.js";
 
 const MaterialManagement = () => {
   const [id, setId] = useState();
@@ -100,7 +101,10 @@ const MaterialManagement = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8"></div>
+      <Header
+        title="Material Management"
+        description="This is the material management page. You can add, update and delete the course material here."
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* Table */}

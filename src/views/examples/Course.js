@@ -20,6 +20,7 @@ import axios from "axios";
 
 // reactstrap components
 import { Card, Container, Row, CardBody, CardTitle, Col } from "reactstrap";
+import Header from "components/Headers/CustomHeader.js";
 
 const MapWrapper = () => {
   const mapRef = React.useRef(null);
@@ -143,7 +144,11 @@ const Course = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8"></div>
+      <Header
+        title="Course"
+        description="This is your course page. You can see the progress you've made
+                with your learning and manage your projects or assigned tasks"
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         <div className="header-body">
