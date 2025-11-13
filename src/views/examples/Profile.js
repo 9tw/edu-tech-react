@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-
+import React, { useState, useEffect } from "react";
 // reactstrap components
 import {
   Button,
@@ -30,15 +30,83 @@ import {
   Col,
 } from "reactstrap";
 // core components
-import UserHeader from "components/Headers/UserHeader.js";
+import Header from "components/Headers/CustomHeader.js";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
+
+  const id = localStorage.getItem("user_id");
+  const [user, setUser] = useState({
+    name: null,
+    no: null,
+    email: null,
+  });
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:3003/user/" + id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const data = await response.data.result;
+      setUser({
+        name: data.name,
+        no: data.no_hp,
+        email: data.email,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setUser();
+        console.log("No User Found");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/user/" + id,
+        {
+          name: user.name,
+          no_hp: user.no,
+          email: user.email,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("Server response:", response.data);
+      alert("Profile updated!");
+      navigate(0);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <>
-      <UserHeader />
+      <Header
+        title="Profile"
+        description="This is your profile page. You can edit your profile and change your password."
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
-        <Row>
+        <Row className="w-100 justify-content-center">
           <Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
             <Card className="card-profile shadow">
               <Row className="justify-content-center">
@@ -56,7 +124,7 @@ const Profile = () => {
               </Row>
               <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                 <div className="d-flex justify-content-between">
-                  <Button
+                  {/* <Button
                     className="mr-4"
                     color="info"
                     href="#pablo"
@@ -73,11 +141,11 @@ const Profile = () => {
                     size="sm"
                   >
                     Message
-                  </Button>
+                  </Button> */}
                 </div>
               </CardHeader>
               <CardBody className="pt-0 pt-md-4">
-                <Row>
+                {/* <Row>
                   <div className="col">
                     <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                       <div>
@@ -121,11 +189,88 @@ const Profile = () => {
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
                     Show more
                   </a>
-                </div>
+                </div> */}
+                <Form className="mt-5">
+                  <div>
+                    <Row>
+                      <Col md="12">
+                        <FormGroup>
+                          <label className="form-control-label" htmlFor="name">
+                            Name
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            id="name"
+                            placeholder="Enter your name"
+                            type="text"
+                            value={user.name}
+                            onChange={(e) =>
+                              setUser({ ...user, name: e.target.value })
+                            }
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md="12">
+                        <FormGroup>
+                          <label className="form-control-label" htmlFor="no">
+                            No HP
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            id="no"
+                            placeholder="Enter your number"
+                            type="text"
+                            value={user.no}
+                            onChange={(e) =>
+                              setUser({ ...user, no: e.target.value })
+                            }
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md="12">
+                        <FormGroup>
+                          <label className="form-control-label" htmlFor="email">
+                            Email
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            id="email"
+                            placeholder="Enter your email"
+                            type="text"
+                            value={user.email}
+                            onChange={(e) =>
+                              setUser({ ...user, email: e.target.value })
+                            }
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <div className="d-flex justify-content-between">
+                      <Button
+                        className="mr-4"
+                        color="info"
+                        onClick={(e) => e.preventDefault()}
+                      >
+                        Change Password
+                      </Button>
+                      <Button
+                        className="float-right"
+                        color="primary"
+                        onClick={() => handleSubmit()}
+                      >
+                        Update
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
               </CardBody>
             </Card>
           </Col>
-          <Col className="order-xl-1" xl="8">
+          {/* <Col className="order-xl-1" xl="8">
             <Card className="bg-secondary shadow">
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">
@@ -223,7 +368,6 @@ const Profile = () => {
                     </Row>
                   </div>
                   <hr className="my-4" />
-                  {/* Address */}
                   <h6 className="heading-small text-muted mb-4">
                     Contact information
                   </h6>
@@ -301,7 +445,6 @@ const Profile = () => {
                     </Row>
                   </div>
                   <hr className="my-4" />
-                  {/* Description */}
                   <h6 className="heading-small text-muted mb-4">About me</h6>
                   <div className="pl-lg-4">
                     <FormGroup>
@@ -319,7 +462,7 @@ const Profile = () => {
                 </Form>
               </CardBody>
             </Card>
-          </Col>
+          </Col> */}
         </Row>
       </Container>
     </>
