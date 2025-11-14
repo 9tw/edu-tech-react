@@ -55,6 +55,7 @@ const Login = () => {
       localStorage.setItem("user_id", res.data.user.id);
       localStorage.setItem("name", res.data.user.name);
       localStorage.setItem("role", res.data.user.role_id);
+      localStorage.setItem("photo", res.data.user.photo);
 
       // Redirect to dashboard or home page
       if (res.data.user.role_id === 0) {

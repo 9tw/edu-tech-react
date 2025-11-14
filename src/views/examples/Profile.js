@@ -25,6 +25,7 @@ import {
   FormGroup,
   Form,
   Input,
+  InputGroup,
   Container,
   Row,
   Col,
@@ -33,16 +34,22 @@ import {
 import Header from "components/Headers/CustomHeader.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/Modal/Modal.js";
 
 const Profile = () => {
   const navigate = useNavigate();
-
   const id = localStorage.getItem("user_id");
+
   const [user, setUser] = useState({
     name: null,
     no: null,
     email: null,
+    photo: null,
   });
+  const [isModalPasswordOpen, setIsModalPasswordOpen] = useState(false);
+  const [password, setPassword] = useState();
+  const [passwordVerify, setPasswordVerify] = useState();
+  const [isModalPhotoOpen, setIsModalPhotoOpen] = useState(false);
 
   const fetchUser = async () => {
     try {
@@ -58,6 +65,7 @@ const Profile = () => {
         name: data.name,
         no: data.no_hp,
         email: data.email,
+        photo: data.photo,
       });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -94,6 +102,63 @@ const Profile = () => {
     }
   };
 
+  const handlePasswordChange = async () => {
+    if (password === passwordVerify) {
+      try {
+        const response = await axios.put(
+          "http://localhost:3003/user/" + id,
+          {
+            email: user.email,
+            password: password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("Server response:", response.data);
+        alert("Password Changed!");
+        setIsModalPasswordOpen(false);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert(error.response?.data?.message || "Something went wrong");
+      }
+    } else {
+      alert("Password and Verify Password Not Same!");
+    }
+  };
+
+  const handlePhotoChange = async () => {
+    if (password === passwordVerify) {
+      try {
+        const response = await axios.put(
+          "http://localhost:3003/user/" + id,
+          {
+            email: user.email,
+            photo: user.photo,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("Server response:", response.data);
+        alert("Profile Photo Changed!");
+        setIsModalPhotoOpen(false);
+        navigate(0);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert(error.response?.data?.message || "Something went wrong");
+      }
+    } else {
+      alert("Password and Verify Password Not Same!");
+    }
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -112,11 +177,11 @@ const Profile = () => {
               <Row className="justify-content-center">
                 <Col className="order-lg-2" lg="3">
                   <div className="card-profile-image">
-                    <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                    <a onClick={() => setIsModalPhotoOpen(true)}>
                       <img
-                        alt="..."
+                        alt="profile"
                         className="rounded-circle"
-                        src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                        src={"http://localhost:3003" + user.photo}
                       />
                     </a>
                   </div>
@@ -253,7 +318,7 @@ const Profile = () => {
                       <Button
                         className="mr-4"
                         color="info"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={() => setIsModalPasswordOpen(true)}
                       >
                         Change Password
                       </Button>
@@ -465,6 +530,87 @@ const Profile = () => {
           </Col> */}
         </Row>
       </Container>
+      <Modal
+        isOpen={isModalPasswordOpen}
+        onClose={() => setIsModalPasswordOpen(false)}
+      >
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Change Password</small>
+          </div>
+          <Form role="form">
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                <Input
+                  placeholder="Password"
+                  type="text"
+                  name="password1"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                <Input
+                  placeholder="Verify Password"
+                  type="text"
+                  name="password2"
+                  value={passwordVerify}
+                  onChange={(e) => setPasswordVerify(e.target.value)}
+                />
+              </InputGroup>
+            </FormGroup>
+            <div className="text-center">
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                onClick={() => handlePasswordChange()}
+              >
+                Change
+              </Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Modal>
+      <Modal
+        isOpen={isModalPhotoOpen}
+        onClose={() => setIsModalPhotoOpen(false)}
+      >
+        <CardBody className="px-lg-5 py-lg-5">
+          <div className="text-center text-muted mb-4">
+            <small>Change Photo</small>
+          </div>
+          <Form role="form">
+            <FormGroup>
+              <InputGroup className="input-group-alternative mb-3">
+                <Input
+                  type="file"
+                  name="photo"
+                  border="0"
+                  borderRadius="0"
+                  padding="0"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setUser({ ...user, photo: e.target.files[0] })
+                  }
+                />
+              </InputGroup>
+            </FormGroup>
+            <div className="text-center">
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                onClick={() => handlePhotoChange()}
+              >
+                Change
+              </Button>
+            </div>
+          </Form>
+        </CardBody>
+      </Modal>
     </>
   );
 };
